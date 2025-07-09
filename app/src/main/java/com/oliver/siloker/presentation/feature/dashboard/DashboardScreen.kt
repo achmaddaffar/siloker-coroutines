@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.oliver.siloker.R
 import com.oliver.siloker.presentation.feature.dashboard.component.SiLokerBottomNavBar
@@ -33,6 +34,7 @@ import com.oliver.siloker.presentation.feature.dashboard.profile.ProfileContent
 @Composable
 fun DashboardScreen(
     snackbarHostState: SnackbarHostState,
+    initialContentIndex: Int,
     onJobDetailNavigate: (Long) -> Unit,
     onJobAdvertisedNavigate: (Long) -> Unit,
     onPostJobNavigate: () -> Unit,
@@ -43,8 +45,8 @@ fun DashboardScreen(
     onLogoutNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedContentIndex by rememberSaveable { mutableIntStateOf(0) }
-    var selectedContentIndexBeforeTransition by rememberSaveable { mutableIntStateOf(0) }
+    var selectedContentIndex by rememberSaveable { mutableIntStateOf(initialContentIndex) }
+    var selectedContentIndexBeforeTransition by rememberSaveable { mutableIntStateOf(initialContentIndex) }
 
     Scaffold(
         modifier = modifier,
@@ -62,7 +64,9 @@ fun DashboardScreen(
                 exit = fadeOut()
             ) {
                 FloatingActionButton(
-                    onClick = onPostJobNavigate
+                    onClick = onPostJobNavigate,
+                    modifier = Modifier
+                        .testTag("fab")
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,

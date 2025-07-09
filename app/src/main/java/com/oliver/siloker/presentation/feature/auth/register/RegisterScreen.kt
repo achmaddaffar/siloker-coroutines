@@ -287,7 +287,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             if (state.isLoading) CircularProgressIndicator()
-            else Text(stringResource(R.string.post))
+            else Text(stringResource(R.string.register))
         }
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,7 +95,8 @@ fun PostJobScreen(
     ) {
         Text(
             text = stringResource(R.string.let_s_post_your_job_advertisement),
-            style = AppTypography.headlineMedium
+            style = AppTypography.headlineMedium,
+            modifier = Modifier.testTag("post_job_title")
         )
         Spacer(Modifier.height(24.dp))
         Box(
@@ -146,7 +148,9 @@ fun PostJobScreen(
             keyboardActions = KeyboardActions {
                 focusManager.moveFocus(FocusDirection.Down)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("title_text_field")
         )
         Spacer(Modifier.height(4.dp))
         OutlinedTextField(
@@ -163,14 +167,17 @@ fun PostJobScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
+                .testTag("description_text_field")
         )
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
-                viewModel.postJob()
+                viewModel.postJob(context)
             },
             enabled = isPostEnabled,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("btn_post")
         ) {
             if (state.isLoading) CircularProgressIndicator()
             else Text(stringResource(R.string.post))

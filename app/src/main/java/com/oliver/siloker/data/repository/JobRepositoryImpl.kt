@@ -72,7 +72,7 @@ class JobRepositoryImpl(
                 )
             }
             emit(response.map { it.data.toJobLatestDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun getJobDetail(
         jobId: Long
@@ -80,7 +80,7 @@ class JobRepositoryImpl(
         flow {
             val response = getResponse { jobService.getJobDetail(jobId) }
             emit(response.map { it.data.toJobDetailDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun postJob(
         uri: Uri,
@@ -144,7 +144,7 @@ class JobRepositoryImpl(
         flow {
             val response = getResponse { jobService.getApplicant(applicantId) }
             emit(response.map { it.data.toDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun getLatestApplication(): Flow<Result<GetLatestApplicationResponse, NetworkError>> =
         flow {
@@ -156,7 +156,7 @@ class JobRepositoryImpl(
                 )
             }
             emit(response.map { it.data.toApplicantsLatestDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun downloadCv(cvUrl: String): Flow<Result<Unit, NetworkError>> =
         flow {
@@ -170,17 +170,17 @@ class JobRepositoryImpl(
                 )
             }
             emit(response.asEmptyDataResult())
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun acceptApplicant(applicantId: Long): Flow<Result<ApplicantsResponseItem, NetworkError>> =
         flow {
             val response = getResponse { jobService.acceptApplicant(applicantId) }
             emit(response.map { it.data.toDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun rejectApplicant(applicantId: Long): Flow<Result<ApplicantsResponseItem, NetworkError>> =
         flow {
             val response = getResponse { jobService.rejectApplicant(applicantId) }
             emit(response.map { it.data.toDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 }

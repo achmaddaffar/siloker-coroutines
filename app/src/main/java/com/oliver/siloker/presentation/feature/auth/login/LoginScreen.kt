@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -113,7 +114,9 @@ fun LoginScreen(
                 focusManager.moveFocus(FocusDirection.Down)
             },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("phone_number_text_field")
         )
         Spacer(Modifier.height(12.dp))
         TextField(
@@ -145,7 +148,9 @@ fun LoginScreen(
                     )
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("password_text_field")
         )
         Spacer(Modifier.height(24.dp))
         Button(
@@ -155,6 +160,7 @@ fun LoginScreen(
             enabled = !state.isLoading,
             modifier = Modifier
                 .fillMaxWidth()
+                .testTag("btn_login")
         ) {
             if (state.isLoading) CircularProgressIndicator()
             else Text(text = stringResource(R.string.login))

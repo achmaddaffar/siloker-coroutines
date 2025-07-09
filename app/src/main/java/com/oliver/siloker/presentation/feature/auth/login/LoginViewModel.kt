@@ -1,5 +1,6 @@
 package com.oliver.siloker.presentation.feature.auth.login
 
+import android.os.Trace
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliver.siloker.domain.model.request.LoginRequest
@@ -51,15 +52,22 @@ class LoginViewModel @Inject constructor(
             password = _state.value.password
         )
 
+        Trace.beginSection("Coroutines_Login")
         authRepository
             .login(request)
             .onStart { _state.update { it.copy(isLoading = true) } }
             .onEach { result ->
                 result
-                    .onSuccess { _event.emit(LoginEvent.Success) }
+                    .onSuccess {
+                        Trace.endSection()
+                        _event.emit(LoginEvent.Success)
+                    }
                     .onError { _event.emit(LoginEvent.Error(it)) }
             }
-            .onCompletion { _state.update { it.copy(isLoading = false) } }
+            .onCompletion {
+                _state.update { it.copy(isLoading = false) }
+                Trace.endSection()
+            }
             .launchIn(viewModelScope)
     }
 }

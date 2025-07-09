@@ -40,7 +40,7 @@ class UserRepositoryImpl(
                 preference.putJobSeekerId(it.data.jobSeeker?.id ?: -1)
             }
             emit(response.map { it.data.toGetProfileDomain() })
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun uploadProfilePicture(uri: Uri): Flow<Result<BaseResponse<Boolean>, NetworkError>> =
         flow {
@@ -58,13 +58,13 @@ class UserRepositoryImpl(
         flow {
             val response = getResponse { userService.updateJobSeeker(request.toJobSeekerDto()) }
             emit(response)
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun updateEmployer(request: UpdateEmployerRequest): Flow<Result<BaseResponse<Boolean>, NetworkError>> =
         flow {
             val response = getResponse { userService.updateEmployer(request.toEmployerDto()) }
             emit(response)
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun getEmployerId(): Long = preference.getEmployerId()
 

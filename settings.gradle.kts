@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SiLoker"
 include(":app")
- 
+include(":benchmark")

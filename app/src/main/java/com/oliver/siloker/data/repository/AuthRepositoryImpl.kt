@@ -33,7 +33,7 @@ class AuthRepositoryImpl(
                 preference.putJobSeekerId(it.data.jobSeekerId ?: -1)
             }
             emit(result.asEmptyDataResult())
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun register(request: RegisterRequest): Flow<Result<BaseResponse<Boolean>, NetworkError>> =
         flow {

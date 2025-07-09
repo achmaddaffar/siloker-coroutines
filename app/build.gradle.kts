@@ -30,7 +30,16 @@ android {
             if (localPropertiesFile.exists())
                 load(localPropertiesFile.inputStream())
         }
-        val baseUrl = localProperties["BASE_URL"] as String ?: ""
+        val baseUrl = localProperties["BASE_URL"] as String
+
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        }
 
         debug {
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
@@ -111,4 +120,6 @@ dependencies {
 
     // Google Font
     implementation(libs.androidx.ui.text.google.fonts)
+
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
 }

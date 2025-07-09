@@ -8,10 +8,13 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.oliver.siloker.presentation.feature.auth.login.LoginScreen
 import com.oliver.siloker.presentation.feature.auth.register.RegisterScreen
 import com.oliver.siloker.presentation.feature.auth.splash.SplashScreen
@@ -44,7 +47,11 @@ fun SiLokerNavigation(
     ) { _ ->
         NavHost(
             navController = navController,
-            startDestination = AuthRoutes.SplashScreen
+            startDestination = AuthRoutes.SplashScreen,
+            modifier = Modifier
+                .semantics {
+                    testTagsAsResourceId = true
+                }
         ) {
             composable<AuthRoutes.SplashScreen> {
                 SplashScreen(
@@ -57,7 +64,16 @@ fun SiLokerNavigation(
                         }
                     },
                     onHomeNavigate = {
-                        navController.navigate(DashboardRoutes.DashboardScreen) {
+                        if (activity?.intent?.action == "com.oliver.siloker.PROFILE_ACTION") {
+                            navController.navigate(DashboardRoutes.DashboardScreen(2)) {
+                                popUpTo<AuthRoutes.SplashScreen> {
+                                    inclusive = true
+                                }
+                            }
+                            return@SplashScreen
+                        }
+
+                        navController.navigate(DashboardRoutes.DashboardScreen(0)) {
                             popUpTo<AuthRoutes.SplashScreen> {
                                 inclusive = true
                             }
@@ -71,7 +87,16 @@ fun SiLokerNavigation(
                     snackbarHostState = snackbarHostState,
                     modifier = modifier,
                     onHomeNavigate = {
-                        navController.navigate(DashboardRoutes.DashboardScreen) {
+                        if (activity?.intent?.action == "com.oliver.siloker.PROFILE_ACTION") {
+                            navController.navigate(DashboardRoutes.DashboardScreen(2)) {
+                                popUpTo<AuthRoutes.SplashScreen> {
+                                    inclusive = true
+                                }
+                            }
+                            return@LoginScreen
+                        }
+
+                        navController.navigate(DashboardRoutes.DashboardScreen(0)) {
                             popUpTo<AuthRoutes.LoginScreen> {
                                 inclusive = true
                             }
@@ -101,8 +126,11 @@ fun SiLokerNavigation(
             }
 
             composable<DashboardRoutes.DashboardScreen> {
+                val args = it.toRoute<DashboardRoutes.DashboardScreen>()
+
                 DashboardScreen(
                     snackbarHostState = snackbarHostState,
+                    initialContentIndex = args.contentIndex,
                     onJobDetailNavigate = dropUnlessResumedWithParam(
                         navController
                     ) {

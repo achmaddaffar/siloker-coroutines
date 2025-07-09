@@ -1,6 +1,8 @@
 package com.oliver.siloker.presentation.feature.dashboard.profile
 
 import android.net.Uri
+import android.os.Trace
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliver.siloker.domain.repository.AuthRepository
@@ -43,6 +45,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun getProfile() {
+        val startTime = System.currentTimeMillis()
+        Trace.beginSection("Coroutine_getProfile")
         userRepository
             .getProfile()
             .onStart { _state.update { it.copy(isLoading = true) } }
@@ -68,6 +72,8 @@ class ProfileViewModel @Inject constructor(
                         isRefreshing = false
                     )
                 }
+                Trace.endSection()
+                Log.e("INGFO", "duration (getProfile): ${System.currentTimeMillis() - startTime}")
             }
             .launchIn(viewModelScope)
     }
@@ -75,7 +81,9 @@ class ProfileViewModel @Inject constructor(
     fun uploadProfilePicture(uri: Uri) {
         userRepository
             .uploadProfilePicture(uri)
-            .onStart { _state.update { it.copy(isLoading = true) } }
+            .onStart {
+                _state.update { it.copy(isLoading = true) }
+            }
             .onEach { result ->
                 result
                     .onSuccess { getProfile() }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 sealed interface DashboardRoutes {
 
     @Serializable
-    data object DashboardScreen : DashboardRoutes
+    data class DashboardScreen(val contentIndex: Int) : DashboardRoutes
 
     @Serializable
     data object EditJobSeekerScreen : DashboardRoutes
