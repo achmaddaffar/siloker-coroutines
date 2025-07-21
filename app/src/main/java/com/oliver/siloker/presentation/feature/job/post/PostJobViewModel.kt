@@ -106,7 +106,6 @@ class PostJobViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.Q)
     fun postJob(context: Context) {
         Trace.beginAsyncSection("Coroutines_postJob", 111)
-        val timeStart = System.currentTimeMillis()
         jobRepository
             .postJob(
                 uri = getUriFromRawResource(context, R.raw.post_job_picture_benchmark),
@@ -118,7 +117,6 @@ class PostJobViewModel @Inject constructor(
                 result
                     .onSuccess {
                         Trace.endAsyncSection("Coroutines_postJob", 111)
-                        Log.e("TIME_EXEC", "duration (postJob): ${System.currentTimeMillis() - timeStart}")
                         _event.emit(PostJobEvent.Success)
                     }
                     .onError { _event.emit(PostJobEvent.Error(it)) }

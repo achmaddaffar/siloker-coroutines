@@ -1,8 +1,10 @@
 package com.oliver.siloker.presentation.feature.job.detail
 
 import android.net.Uri
+import android.os.Build
 import android.os.Trace
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -57,9 +59,9 @@ class JobDetailViewModel @Inject constructor(
         _state.update { it.copy(cvUri = value) }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun getJobDetail() {
-        Trace.beginSection("Coroutine_getJobDetail")
-        val timeStart = System.currentTimeMillis()
+        Trace.beginAsyncSection("Coroutine_getJobDetail", 222)
         jobRepository
             .getJobDetail(jobId)
             .onStart { _state.update { it.copy(isLoading = true) } }
@@ -70,8 +72,7 @@ class JobDetailViewModel @Inject constructor(
             }
             .onCompletion {
                 _state.update { it.copy(isLoading = false) }
-                Log.e("TIME_EXEC", "duration (getJobDetail): ${System.currentTimeMillis() - timeStart}")
-                Trace.endSection()
+                Trace.endAsyncSection("Coroutine_getJobDetail", 222)
             }
             .launchIn(viewModelScope)
     }

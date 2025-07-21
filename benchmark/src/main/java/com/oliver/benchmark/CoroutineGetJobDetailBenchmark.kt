@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalMetricApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
-class GetJobDetailBenchmark_Coroutine {
+class CoroutineGetJobDetailBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
@@ -33,22 +33,28 @@ class GetJobDetailBenchmark_Coroutine {
             TraceSectionMetric("Coroutine_getJobDetail", TraceSectionMetric.Mode.First),
         ),
         iterations = 1,
-        startupMode = StartupMode.COLD
+        startupMode = StartupMode.COLD,
+        setupBlock = {
+            device.executeShellCommand("pm clear $packageName")
+        }
     ) {
         pressHome()
         startActivityAndWait()
 
-        if (device.hasObject(By.text("Login"))) {
-            login()
-        }
+        login()
 
         val jobListHasChild = By.hasChild(By.res("home_job_list"))
         device.wait(Until.hasObject(jobListHasChild), 5_000)
 
         val jobList = device.findObject(By.res("home_job_list"))
-        jobList.scroll(Direction.DOWN, 200f)
+        repeat(5) {
+            jobList.scroll(Direction.DOWN, 500f)
+        }
 
-        device.findObject(By.text("Data Engineer at SiLoker")).click()
-        device.wait(Until.hasObject(By.text("Apply")), 5_000)
+        device.wait(Until.hasObject(By.text("")), 5_000)
+        device.findObject(By.text("Senior Android Developer (Kotlin)")).click()
+
+        device.waitForIdle(3_000)
+        device.wait(Until.hasObject(By.res("job_image")), 5_000)
     }
 }

@@ -1,7 +1,9 @@
 package com.oliver.siloker.presentation.feature.job.post
 
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -50,6 +52,7 @@ import com.oliver.siloker.presentation.component.LoadingDialog
 import com.oliver.siloker.presentation.ui.theme.AppTypography
 import com.oliver.siloker.presentation.util.ErrorMessageUtil.parseNetworkError
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun PostJobScreen(
     snackbarHostState: SnackbarHostState,

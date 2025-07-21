@@ -38,9 +38,7 @@ class CoroutinePostJobBenchmark {
         pressHome()
         startActivityAndWait()
 
-        if (device.hasObject(By.text("Login"))) {
-            login()
-        }
+        login()
 
         device.wait(Until.hasObject(By.res(packageName, "home_job_list")), 5_000)
 
