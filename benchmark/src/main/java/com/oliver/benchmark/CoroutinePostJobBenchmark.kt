@@ -33,7 +33,10 @@ class CoroutinePostJobBenchmark {
             TraceSectionMetric("Coroutines_postJob", TraceSectionMetric.Mode.First),
         ),
         iterations = 1,
-        startupMode = StartupMode.COLD
+        startupMode = StartupMode.COLD,
+        setupBlock = {
+            device.executeShellCommand("pm clear $packageName")
+        }
     ) {
         pressHome()
         startActivityAndWait()
@@ -83,8 +86,8 @@ class CoroutinePostJobBenchmark {
         val btn = device.findObject(postBtnSelector)
         btn.click()
 
-        device.waitForIdle(5_000)
+        device.waitForIdle(10_000)
 
-        device.wait(Until.hasObject(By.res("home_job_list")), 5_000)
+        device.wait(Until.hasObject(By.res("home_job_list")), 10_000)
     }
 }

@@ -54,7 +54,7 @@ class CoroutineGetJobDetailBenchmark {
         device.wait(Until.hasObject(By.text("")), 5_000)
         device.findObject(By.text("Senior Android Developer (Kotlin)")).click()
 
-        device.waitForIdle(3_000)
-        device.wait(Until.hasObject(By.res("job_image")), 5_000)
+        device.waitForIdle(10_000)
+        device.wait(Until.hasObject(By.res("job_image")), 10_000)
     }
 }
